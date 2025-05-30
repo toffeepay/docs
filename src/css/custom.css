@@ -1,0 +1,116 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #e06141; /* ToffeePay orange-red color */
+  --ifm-color-primary-dark: #d84f2d;
+  --ifm-color-primary-darker: #c9452a;
+  --ifm-color-primary-darkest: #b83c22;
+  --ifm-color-primary-light: #e57559;
+  --ifm-color-primary-lighter: #e98971;
+  --ifm-color-primary-lightest: #ef9e8a;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Additional brand colors */
+  --toffee-secondary: #5a3b2d; /* Brown - for secondary elements */
+  --toffee-accent: #f9e8d6; /* Light cream - for accents */
+  --toffee-neutral: #3c3c3c; /* Dark gray - for text */
+  
+  /* Typography */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ifm-heading-font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #f57b56; /* Slightly lighter orange-red for dark mode */
+  --ifm-color-primary-dark: #f06740;
+  --ifm-color-primary-darker: #eb5529;
+  --ifm-color-primary-darkest: #d8461a;
+  --ifm-color-primary-light: #f78f6d;
+  --ifm-color-primary-lighter: #f9a384;
+  --ifm-color-primary-lightest: #fbb8a1;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  
+  /* Additional brand colors for dark mode */
+  --toffee-secondary: #8f6e5e;
+  --toffee-accent: #8a7160;
+  --toffee-neutral: #e0e0e0;
+}
+
+/* Navbar customization */
+.navbar {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero section customization */
+.hero--primary {
+  background-color: var(--ifm-color-primary);
+  background-image: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-dark) 100%);
+  color: white;
+}
+
+.hero__title {
+  font-weight: 700;
+}
+
+.hero__subtitle {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* API Reference styling */
+.api-method {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: var(--ifm-card-border-radius);
+  box-shadow: var(--ifm-card-shadow);
+}
+
+.api-method--get {
+  background-color: rgba(97, 175, 254, 0.1);
+  border-left: 4px solid #61affe;
+}
+
+.api-method--post {
+  background-color: rgba(73, 204, 144, 0.1);
+  border-left: 4px solid #49cc90;
+}
+
+.api-method--put {
+  background-color: rgba(252, 161, 48, 0.1);
+  border-left: 4px solid #fca130;
+}
+
+.api-method--delete {
+  background-color: rgba(249, 62, 62, 0.1);
+  border-left: 4px solid #f93e3e;
+}
+
+/* Button customization */
+.button--secondary {
+  background-color: white;
+  color: var(--ifm-color-primary);
+  border-color: white;
+}
+
+.button--secondary:hover {
+  background-color: var(--ifm-color-white);
+  color: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-white);
+}
+
+.button--outline.button--secondary {
+  color: white;
+  border-color: white;
+}
+
+.button--outline.button--secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
