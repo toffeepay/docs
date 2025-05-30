@@ -11,6 +11,38 @@ This guide walks you through:
 4. Handling payment confirmation via webhook
 5. Resuming the game using `return_url`
 
+## Payment Flow
+
+```mermaid
+sequenceDiagram
+    participant Game as Game
+    participant Server as Game Server
+    participant API as ToffeePay
+    participant Page as Payment Page
+    participant User as User
+
+    Game->>Server: Request payment for item
+    Server->>API: CreateSession (with API key)
+    API->>Server: Return session_id & payment_url
+    Server->>Game: Send payment_url
+    Game->>Page: Open payment_url in browser
+    Page->>User: Show payment form
+    User->>Page: Complete payment (Apple Pay/etc)
+    
+    par Webhook Flow
+        Page->>API: Payment successful
+        API->>Server: Send webhook (signed)
+        Server->>Server: Verify webhook signature
+        Server->>Server: Process payment & grant items
+    and Return URL Flow
+        Page->>Game: Redirect to return_url (deep link)
+        Game->>Server: Extract session_id, request status
+        Server->>API: GetSessionStatus
+        API->>Server: Return payment status
+        Server->>Game: Confirm payment & show items
+    end
+```
+
 ---
 
 ## Authentication
@@ -30,7 +62,7 @@ You’ll receive this key when you register your game. Keep it secret and **only
 Send a server-side request to create a payment session.
 
 ```http
-POST /payments.v1.PaymentService/CreateSession
+POST /pay.v1.PaymentService/CreateSession
 Authorization: Bearer <your_api_key>
 Content-Type: application/json
 
@@ -129,7 +161,7 @@ To confirm the payment status after returning to the game:
 
 **Example Request:**
 ```http
-POST /payments.v1.PaymentService/GetSessionStatus
+POST /pay.v1.PaymentService/GetSessionStatus
 Authorization: Bearer <your_api_key>
 Content-Type: application/json
 
@@ -148,7 +180,7 @@ Content-Type: application/json
 
 - If `status` is `paid`, grant the items or show success.
 - If `status` is `pending`, show a waiting screen.
-- If `status` is `failed`, inform the user.
+- If `status` is `failed` or `cancelled`, inform the user.
 
 ## Image Requirements
 
