@@ -36,7 +36,7 @@ sequenceDiagram
         Server->>Server: Process payment & grant items
     and Return URL Flow
         Page->>Game: Redirect to return_url (deep link)
-        Game->>Server: Extract session_id, request status
+        Game->>Server: Use existing session_id, request status
         Server->>API: GetSessionStatus
         API->>Server: Return payment status
         Server->>Game: Confirm payment & show items
@@ -145,7 +145,7 @@ This is typically a **custom deep link** that your game handles to:
 
 **Example:**
 ```json
-"return_url": "mygame://payment-complete?session_id=sess_abc123"
+"return_url": "mygame://payment-complete"
 ```
 
 Make sure your mobile client is set up to **handle and parse this URI scheme**.
@@ -156,8 +156,7 @@ Make sure your mobile client is set up to **handle and parse this URI scheme**.
 
 To confirm the payment status after returning to the game:
 
-1. Extract `session_id` from the URL.
-2. Call `GetSessionStatus` using your API key.
+1. Call `GetSessionStatus` using existing `session_id` and your API key.
 
 **Example Request:**
 ```http
