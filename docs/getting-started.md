@@ -83,8 +83,8 @@ Content-Type: application/json
 
 ```json
 {
-  "session_id": "sess_abc123",
-  "payment_url": "https://pay.toffeepay.com/sess_abc123"
+  "id": "sess_abc123",
+  "url": "https://pay.toffeepay.com/sess_abc123"
 }
 ```
 
@@ -92,7 +92,7 @@ Content-Type: application/json
 
 ## Open the Payment Page
 
-Open the returned `payment_url` in the browser.
+Open the returned payment `url` in the browser.
 
 The user will:
 - View the list of items and total price
@@ -165,14 +165,14 @@ Authorization: Bearer <your_api_key>
 Content-Type: application/json
 
 {
-  "session_id": "sess_abc123"
+  "id": "sess_abc123"
 }
 ```
 
 **Example Response:**
 ```json
 {
-  "session_id": "sess_abc123",
+  "id": "sess_abc123",
   "status": "paid"
 }
 ```
