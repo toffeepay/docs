@@ -357,11 +357,10 @@ https://yourgame.com/images/gold-coins.png
 
 1. **Authentication**: See [Authentication](/authentication) for API key management
 2. **Webhook verification**: Always verify webhook signatures (see [Webhooks](/webhooks))
-3. **Idempotency**: Handle duplicate webhook events gracefully
-4. **Error handling**: Implement proper error handling for all payment statuses
-5. **User experience**: Show loading states and clear success/failure messages
-6. **Security**: Use HTTPS for all webhook endpoints and return URLs
-7. **Testing**: Use sandbox mode for development and testing
+3. **Error handling**: Implement proper error handling for all payment statuses
+4. **User experience**: Show loading states and clear success/failure messages
+5. **Security**: Use HTTPS for all webhook endpoints and return URLs
+6. **Testing**: Use sandbox mode for development and testing
 
 ---
 
