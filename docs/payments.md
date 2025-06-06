@@ -134,6 +134,18 @@ ToffeePay notifies you of payment events through two methods:
 
 When a payment is completed, ToffeePay sends a signed webhook to your backend. See the [Webhooks](/webhooks) page for detailed implementation.
 
+**Sample Payload:**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "event": "payment.succeeded",
+  "timestamp": "2023-06-01T12:05:00Z",
+  "data": {
+    "payment_id": "pay_xyz789"
+  }
+}
+```
+
 ### 2. Return URL
 
 After payment, the user is redirected to your specified `return_url`. This is typically a custom deep link that your game handles.
