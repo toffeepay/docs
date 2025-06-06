@@ -130,7 +130,7 @@ The user will:
 
 ToffeePay notifies you of payment events through two methods:
 
-### 1. Webhooks (Recommended)
+### 1. Webhooks
 
 When a payment is completed, ToffeePay sends a signed webhook to your backend. See the [Webhooks](/webhooks) page for detailed implementation.
 
@@ -225,11 +225,13 @@ Content-Type: application/json
 {
   "id": "pay_xyz789",
   "session_id": "sess_abc123",
+  "status": "succeeded",
   "amount": 499,
   "currency": "USD",
   "method": "apple_pay",
   "details": "50 Gold Coins",
-  "created_at": "2023-06-01T12:05:00Z"
+  "created_at": "2023-06-01T12:05:00Z",
+  "succeeded_at": "2023-06-01T12:05:30Z"
 }
 ```
 
@@ -303,11 +305,13 @@ Content-Type: application/json
     {
       "id": "pay_xyz789",
       "session_id": "sess_abc123",
+      "status": "succeeded",
       "amount": 499,
       "currency": "USD",
       "method": "apple_pay",
       "details": "50 Gold Coins",
-      "created_at": "2023-06-01T12:05:00Z"
+      "created_at": "2023-06-01T12:05:00Z",
+      "succeeded_at": "2023-06-01T12:05:30Z"
     }
   ],
   "total": 1,

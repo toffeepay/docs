@@ -9,7 +9,7 @@ This guide walks you through:
 2. [Creating a payment session](#create-a-payment-session)
 3. [Opening the payment page](#open-the-payment-page)
 4. [Handling payment confirmation via webhook](#handle-payment-webhook)
-5. [Resuming the game using `return_url`](#return-to-game)
+5. [Resuming the game`](#return-to-game)
 6. [Confirming payment](#confirming-payment)
 
 For a visual overview of the complete payment flow, see the [Payments](/payments#payment-flow) page.
