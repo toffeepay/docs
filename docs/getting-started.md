@@ -5,86 +5,35 @@ sidebar_position: 1
 # Getting Started
 
 This guide walks you through:
-1. Authentication
-2. Creating a payment session
-3. Opening the payment page
-4. Handling payment confirmation via webhook
-5. Resuming the game using `return_url`
+1. [Authentication](#authentication)
+2. [Creating a payment session](#create-a-payment-session)
+3. [Opening the payment page](#open-the-payment-page)
+4. [Handling payment confirmation via webhook](#handle-payment-webhook)
+5. [Resuming the game`](#return-to-game)
+6. [Confirming payment](#confirming-payment)
 
-## Payment Flow
-
-```mermaid
-sequenceDiagram
-    participant Game as Game
-    participant Server as Game Server
-    participant API as ToffeePay
-    participant Page as Payment Page
-    participant User as User
-
-    Game->>Server: Request payment for item
-    Server->>API: CreateSession (with API key)
-    API->>Server: Return session_id & payment_url
-    Server->>Game: Send payment_url
-    Game->>Page: Open payment_url in browser
-    Page->>User: Show payment form
-    User->>Page: Complete payment (Apple Pay/etc)
-    
-    par Webhook Flow
-        Page->>API: Payment successful
-        API->>Server: Send webhook (signed)
-        Server->>Server: Verify webhook signature
-        Server->>Server: Process payment & grant items
-    and Return URL Flow
-        Page->>Game: Redirect to return_url (deep link)
-        Game->>Server: Use existing session_id, request status
-        Server->>API: GetSessionStatus
-        API->>Server: Return payment status
-        Server->>Game: Confirm payment & show items
-    end
-```
+For a visual overview of the complete payment flow, see the [Payments](/payments#payment-flow) page.
 
 ---
 
 ## Authentication
 
-All requests to the ToffeePay API must include your API key:
-
-```http
-Authorization: Bearer <your_api_key>
-```
-
-You’ll receive this key when you register your game. Keep it secret and **only use it server-side**.
+All requests to the ToffeePay API must include your API key. See the [Authentication](/authentication) page for details.
 
 ---
 
 ## Create a Payment Session
 
-Send a server-side request to create a payment session.
+Send a server-side request to create a payment session. See the [Payments](/payments#create-a-payment-session) page for detailed API documentation.
 
+**Quick Example:**
 ```http
 POST /pay.v1.PaymentService/CreateSession
-Authorization: Bearer <your_api_key>
-Content-Type: application/json
-
 {
   "game_id": "space_shooter",
   "user_id": "player_42",
-  "item": {
-    "title": "50 Gold Coins",
-    "price": 499,
-    "currency": "USD",
-    "image": "data:image/png;base64,..."
-  },
+  "item": { "title": "50 Gold Coins", "price": 499, "currency": "USD" },
   "return_url": "mygame://payment-complete"
-}
-```
-
-**Response**
-
-```json
-{
-  "id": "sess_abc123",
-  "url": "https://pay.toffeepay.com/sess_abc123"
 }
 ```
 
@@ -100,42 +49,15 @@ The user will:
 
 ---
 
-## Handle Payment Webhook (optional)
+## Handle Payment Webhook
 
-Once payment is successful, ToffeePay sends a **signed webhook** to your backend.
+Once payment is successful, ToffeePay sends a **signed webhook** to your backend. This is the most reliable way to process payments.
 
-**Sample Payload:**
-```json
-{
-  "session_id": "sess_abc123",
-  "user_id": "player_42",
-  "game_id": "space_shooter",
-  "status": "paid",
-  "item": { "title": "50 Gold Coins", "price": 499, "currency": "USD" }
-}
-```
-
-**Header:**
-```
-X-ToffeePay-Signature: t=1717000000,v1=6aeedfabc12345...
-```
-
-### Verifying the webhook
-
-1. Parse `t` and `v1` from the signature header.
-2. Compute:
-   ```
-   signed_payload = t + "." + raw_body
-   expected_signature = HMAC_SHA256(your_webhook_secret, signed_payload)
-   ```
-3. Validate that `t` is within 5 minutes.
-4. Use a constant-time comparison to compare signatures.
-
-You can **configure or rotate your webhook secret** in the ToffeePay dashboard.
+See the [Webhooks](/webhooks) page for complete implementation details including signature verification.
 
 ---
 
-## Return to Game (return_url)
+## Return to Game
 
 After a successful payment, the player is **redirected to your specified `return_url`**.
 
@@ -154,42 +76,7 @@ Make sure your mobile client is set up to **handle and parse this URI scheme**.
 
 ### Confirming Payment
 
-To confirm the payment status after returning to the game:
+To confirm the payment status after returning to the game, call `GetSessionStatus` using the existing `session_id`.
 
-1. Call `GetSessionStatus` using existing `session_id` and your API key.
+See the [Payments](/payments#check-session-status) page for detailed API documentation and status handling.
 
-**Example Request:**
-```http
-POST /pay.v1.PaymentService/GetSessionStatus
-Authorization: Bearer <your_api_key>
-Content-Type: application/json
-
-{
-  "id": "sess_abc123"
-}
-```
-
-**Example Response:**
-```json
-{
-  "id": "sess_abc123",
-  "status": "paid"
-}
-```
-
-- If `status` is `paid`, grant the items or show success.
-- If `status` is `pending`, show a waiting screen.
-- If `status` is `failed` or `cancelled`, inform the user.
-
-## Image Requirements
-
-- Format: PNG, JPG, WebP
-- Recommended size: ≤ 300 KB
-- Must be base64-encoded with MIME prefix:
-  ```
-  data:image/png;base64,...
-  ```
-  or URL
-  ```
-  https://...
-  ```
