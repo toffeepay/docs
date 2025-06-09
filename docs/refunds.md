@@ -46,7 +46,7 @@ Content-Type: application/json
 
 **Parameters:**
 - `payment_id`: The original payment ID to refund
-- `reason`: Reason for the refund
+- `reason`: Optional reason for the refund
 
 **Response**
 
