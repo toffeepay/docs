@@ -60,10 +60,25 @@ Content-Type: application/json
 
 ## Refund Statuses
 
-- `pending`: Refund is being processed
-- `succeeded`: Refund has been successfully processed
+Refunds can have the following statuses:
+
+- `pending`: Refund created but not yet processed
+- `succeeded`: Refund has been successfully processed and funds returned
 - `failed`: Refund failed (e.g., insufficient funds, payment method issues)
-- `cancelled`: Refund was cancelled
+- `cancelled`: Refund was cancelled before completion
+
+**Status Flow:**
+1. Refund starts as `pending`
+2. Refund resolves to either `succeeded`, `failed`, or `cancelled`
+
+### Timestamp Fields
+
+Refunds include relevant timestamp fields based on their final status:
+
+- `created_at`: When the refund was initiated
+- `succeeded_at`: When the refund completed successfully (if applicable)
+- `failed_at`: When the refund failed (if applicable)
+- `cancelled_at`: When the refund was cancelled (if applicable)
 
 ---
 
@@ -72,6 +87,7 @@ Content-Type: application/json
 ToffeePay sends webhooks for the following refund-related events:
 
 ### Refund Events
+- `refund.created`: When a refund is created and processing begins
 - `refund.succeeded`: When a refund has been processed successfully
 - `refund.failed`: When a refund attempt fails
 - `refund.cancelled`: When a refund is cancelled
