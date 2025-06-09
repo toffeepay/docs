@@ -85,6 +85,8 @@ Content-Type: application/json
 
 ## Payment Statuses
 
+### Session Statuses
+
 Payment sessions can have the following statuses:
 
 - `pending`: Payment session created but not yet paid
@@ -92,6 +94,35 @@ Payment sessions can have the following statuses:
 - `failed`: Payment attempt failed
 - `cancelled`: Payment was cancelled by the user
 - `expired`: Payment session has expired
+
+### Payment Statuses
+
+Individual payment objects (created when processing a session) have these statuses:
+
+- `processing`: Payment is being processed by the payment provider
+- `succeeded`: Payment completed successfully
+- `failed`: Payment processing failed
+
+**Status Flow:**
+1. Session starts as `pending`
+2. When payment begins, a Payment object is created with status `processing`
+3. Payment resolves to either `succeeded` or `failed`
+4. Session status updates to `paid` (if payment succeeded) or `failed` (if payment failed)
+
+### Timestamp Fields
+
+Both sessions and payments include relevant timestamp fields:
+
+**Session timestamps:**
+- `created_at`: When the session was created
+- `paid_at`: When the session was successfully paid (if applicable)
+- `failed_at`: When the session failed (if applicable)
+- `cancelled_at`: When the session was cancelled (if applicable)
+
+**Payment timestamps:**
+- `created_at`: When payment processing began
+- `succeeded_at`: When payment completed successfully (if applicable)
+- `failed_at`: When payment failed (if applicable)
 
 ---
 
@@ -107,7 +138,7 @@ ToffeePay sends webhooks for the following payment-related events:
 - `session.cancelled`: When session is cancelled by user
 
 ### Payment Events
-- `payment.processing`: When payment is being processed (for async methods)
+- `payment.created`: When a payment is created and processing begins
 - `payment.succeeded`: When payment completes successfully
 - `payment.failed`: When payment attempt fails
 
