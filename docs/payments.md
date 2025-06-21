@@ -188,6 +188,33 @@ After payment, the user is redirected to your specified `return_url`. This is ty
 
 ---
 
+## Cancel a Payment Session
+
+You can cancel a payment session that is still in `pending` status:
+
+```http
+POST /pay.v1.PaymentService/CancelSession
+Authorization: Bearer <your_api_key>
+Content-Type: application/json
+
+{
+  "id": "sess_abc123"
+}
+```
+
+**Response:**
+```json
+{}
+```
+
+When a session is cancelled:
+- The session status changes to `cancelled`
+- The `cancelled_at` timestamp is set
+- A `session.cancelled` webhook event is sent
+- The session cannot be paid and the payment URL becomes invalid
+
+---
+
 ## Check Session Status
 
 To confirm session status (especially when handling return URLs), you can use either endpoint:
