@@ -117,8 +117,8 @@ Individual payment objects (created when processing a session) have these status
    **Note:** Whether payments automatically proceed from `authorized` to `succeeded` or require manual completion via CompletePayment is configured during game setup.
 4. Session status updates based on final payment status:
    - `paid` (if payment succeeded)
-   - `cancelled` (if session was cancelled)
-   - `failed` (if payment failed)
+   - `cancelled` (if session was cancelled manually via CancelSession or after 3 cancelled payment attempts)
+   - `failed` (after 3 failed payment attempts)
 
 ### Timestamp Fields
 
