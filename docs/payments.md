@@ -128,6 +128,7 @@ Both sessions and payments include relevant timestamp fields:
 - `created_at`: When the session was created
 - `paid_at`: When the session was successfully paid (if applicable)
 - `failed_at`: When the session failed (if applicable)
+- `expired_at`: When the session expired (if applicable)
 - `cancelled_at`: When the session was cancelled (if applicable)
 
 **Payment timestamps:**
