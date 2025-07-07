@@ -92,7 +92,7 @@ Payment sessions can have the following statuses:
 - `pending`: Payment session created but not yet paid
 - `paid`: Payment successfully completed
 - `failed`: Payment attempt failed
-- `cancelled`: Payment was cancelled by the user
+- `cancelled`: Payment session was cancelled
 - `expired`: Payment session has expired
 
 ### Payment Statuses
@@ -100,14 +100,25 @@ Payment sessions can have the following statuses:
 Individual payment objects (created when processing a session) have these statuses:
 
 - `processing`: Payment is being processed by the payment provider
+- `authorized`: Payment has been authorized but not yet captured
 - `succeeded`: Payment completed successfully
+- `cancelled`: Authorized payment was cancelled before capture
 - `failed`: Payment processing failed
 
 **Status Flow:**
 1. Session starts as `pending`
 2. When payment begins, a Payment object is created with status `processing`
-3. Payment resolves to either `succeeded` or `failed`
-4. Session status updates to `paid` (if payment succeeded) or `failed` (if payment failed)
+3. Payment can transition to:
+   - `authorized`: Payment authorized but not captured
+   - `succeeded`: Payment completed successfully (either automatically or via CompletePayment)
+   - `cancelled`: Authorized payment was cancelled via CancelPayment
+   - `failed`: Payment processing failed
+
+   **Note:** Whether payments automatically proceed from `authorized` to `succeeded` or require manual completion via CompletePayment is configured during game setup.
+4. Session status updates based on final payment status:
+   - `paid` (if payment succeeded)
+   - `cancelled` (if session was cancelled)
+   - `failed` (if payment failed)
 
 ### Timestamp Fields
 
@@ -121,7 +132,9 @@ Both sessions and payments include relevant timestamp fields:
 
 **Payment timestamps:**
 - `created_at`: When payment processing began
+- `authorized_at`: When payment was authorized (if applicable)
 - `succeeded_at`: When payment completed successfully (if applicable)
+- `cancelled_at`: When payment was cancelled (if applicable)
 - `failed_at`: When payment failed (if applicable)
 
 ---
@@ -139,7 +152,9 @@ ToffeePay sends webhooks for the following payment-related events:
 
 ### Payment Events
 - `payment.created`: When a payment is created and processing begins
+- `payment.authorized`: When payment is authorized but not yet captured
 - `payment.succeeded`: When payment completes successfully
+- `payment.cancelled`: When an authorized payment is cancelled
 - `payment.failed`: When payment attempt fails
 
 See the [Webhooks](/webhooks) page for implementation details and signature verification.
@@ -273,6 +288,54 @@ Content-Type: application/json
 - If `status` is `paid`, grant the items and show success
 - If `status` is `pending`, show a waiting screen
 - If `status` is `failed`, `cancelled` or `expired`, inform the user and offer to retry
+
+---
+
+## Complete Payment
+
+When your game wants to control when an authorized payment is captured, use CompletePayment. This is useful for scenarios where you want to authorize payment but only capture it after fulfilling the order (e.g., confirming item availability).
+
+```http
+POST /pay.v1.PaymentService/CompletePayment
+Authorization: Bearer <your_api_key>
+Content-Type: application/json
+
+{
+  "id": "pay_xyz789"
+}
+```
+
+**Parameters:**
+- `id`: The payment ID to complete
+
+**Response:**
+```json
+{}
+```
+
+---
+
+## Cancel Payment
+
+Cancel an authorized payment before it's captured. This releases the hold on the customer's payment method.
+
+```http
+POST /pay.v1.PaymentService/CancelPayment
+Authorization: Bearer <your_api_key>
+Content-Type: application/json
+
+{
+  "id": "pay_xyz789"
+}
+```
+
+**Parameters:**
+- `id`: The payment ID to cancel
+
+**Response:**
+```json
+{}
+```
 
 ---
 
